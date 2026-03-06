@@ -29,6 +29,7 @@ dependencies = [
     "pathsim",
     "numpy>=1.15",
     "scipy>=1.2",
+    "jsbsim>=1.2.4"
 ]
 
 [project.optional-dependencies]
