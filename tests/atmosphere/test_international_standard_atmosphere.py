@@ -42,11 +42,6 @@ class TestISAtmosphere(unittest.TestCase):
 
             isa.update(None)
 
-            print(f"Testing altitude {band_info[0]} m: pressure={isa.outputs[0]} Pa, temperature={isa.outputs[2]} K")
-
-            print(isa.outputs[0], band_info[2])
-            print(isa.outputs[2], band_info[1])
-
             self.assertAlmostEqual(isa.outputs[0], band_info[2], places=1)  # pressure
             self.assertAlmostEqual(isa.outputs[2], band_info[1], places=1)  # temperature
 
@@ -109,6 +104,37 @@ class TestISAtmosphere(unittest.TestCase):
 
             self.assertGreater(density_std_day, density_pos_dev)
             self.assertGreater(density_neg_dev, density_std_day)
+
+    def test_spot_altitudes(self):
+        """Test pressure, density, temp, speed of sound and spot altitudes."""
+
+        isa = ISAtmosphere()
+
+        # References from - https://aerospaceweb.org/design/scripts/atmosphere/
+        references = [
+            [    0,  101325,    1.2250,     288.15, 340.294 ],
+            [ 5000,  54048,     0.7364,     255.68, 320.545 ],
+            [15000,  12112,     0.1948,     216.65, 295.069 ],
+            [25000,  2549.2,    0.0401,     221.55, 298.389 ],
+            [35000,  574.59,    0.0085,     236.51, 308.299 ],
+            [49000,  90.337,    0.0012,     270.65, 329.799 ],
+            [65000,  10.930,    0.00016,    233.29, 306.193 ],
+            [75000,  2.388,     0.0000399,  208.40, 289.396 ]
+        ]
+
+        for ref in references:
+            isa.inputs[0] = ref[0] # altitude
+            isa.inputs[1] = 0
+            isa.update(None)
+            pressure = isa.outputs[0]
+            density = isa.outputs[1]
+            temperature = isa.outputs[2]
+            speed_of_sound = isa.outputs[3]
+
+            self.assertAlmostEqual(pressure, ref[1], places=0)
+            self.assertAlmostEqual(density, ref[2], places=4)
+            self.assertAlmostEqual(temperature, ref[3], places=2)
+            self.assertAlmostEqual(speed_of_sound, ref[4], places=3)
 
 
 # RUN TESTS LOCALLY ====================================================================
