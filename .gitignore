@@ -71,6 +71,7 @@ ENV/
 # IDEs
 .vscode/
 .idea/
+.vs/
 
 # OS generated files
 .DS_Store

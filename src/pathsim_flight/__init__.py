@@ -11,3 +11,8 @@ except ImportError:
     __version__ = "unknown"
 
 __all__ = ["__version__"]
+
+# For direct block import from main package
+from .atmosphere import *
+from .jsbsim import *
+from .utils import *
