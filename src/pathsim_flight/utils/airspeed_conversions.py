@@ -95,7 +95,7 @@ class CAStoTAS(Function):
 
         mach = CAStoMach()._eval(cas, altitude)
         ISA = ISAtmosphere()
-        _, _, _, speed_of_sound = ISA.state(altitude)
+        _, _, _, speed_of_sound = ISA._eval(altitude)
         return mach * speed_of_sound
 
 
@@ -120,7 +120,7 @@ class TAStoCAS(Function):
         """Assume m/s for input and output velocities and m for altitude."""
 
         ISA = ISAtmosphere()
-        pressure, _, _, speed_of_sound = ISA.state(altitude)
+        pressure, _, _, speed_of_sound = ISA._eval(altitude)
 
         mach = tas / speed_of_sound
         qc = pressure * ( math.pow(1 + 0.2*mach**2, 7/2) - 1)
@@ -148,8 +148,8 @@ class CAStoEAS(Function):
     def _eval(self, cas, altitude):
         """Assume m/s for input and output velocities and m for altitude."""
         ISA = ISAtmosphere()
-        _, density, _, _ = ISA.state(altitude)
-        _, rho0, _, _ = ISA.state(0)  # Standard sea level density
+        _, density, _, _ = ISA._eval(altitude)
+        _, rho0, _, _ = ISA._eval(0)  # Standard sea level density
         eas = CAStoTAS()._eval(cas, altitude) * math.sqrt(density / rho0)
         return eas
 
@@ -174,8 +174,8 @@ class EAStoTAS(Function):
     def _eval(self, eas, altitude):
         """Assume m/s for input and output velocities and m for altitude."""
         ISA = ISAtmosphere()
-        _, density, _, _ = ISA.state(altitude)
-        _, rho0, _, _ = ISA.state(0)  # Standard sea level density
+        _, density, _, _ = ISA._eval(altitude)
+        _, rho0, _, _ = ISA._eval(0)  # Standard sea level density
         tas = eas * math.sqrt(rho0 / density)
         return tas
 
@@ -197,9 +197,9 @@ class MachtoCAS(Function):
     def __init__(self):
         super().__init__(func=self._eval)
 
-    def _eval(mach, altitude):
+    def _eval(self, mach, altitude):
         """Assume m for altitude."""
         ISA = ISAtmosphere()
-        _, _, _, speed_of_sound = ISA.state(altitude)
-        return TAStoCAS()._eval(mach * speed_of_sound)
+        _, _, _, speed_of_sound = ISA._eval(altitude)
+        return TAStoCAS()._eval(mach * speed_of_sound, altitude)
 
