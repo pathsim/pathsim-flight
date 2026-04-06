@@ -22,6 +22,12 @@
 
 PathSim-Flight extends the [PathSim](https://github.com/pathsim/pathsim) simulation framework with blocks for flight dynamics and aerospace simulations. All blocks follow the standard PathSim block interface and can be connected into simulation diagrams.
 
+## Install
+
+```bash
+pip install pathsim-flight
+```
+
 ## License
 
 MIT
