@@ -29,7 +29,11 @@ dependencies = [
     "pathsim",
     "numpy>=1.15",
     "scipy>=1.2",
-    "jsbsim>=1.2.4"
+    # JSBSim ships native code that can't be installed in Pyodide. The
+    # marker resolves to a normal eager install on every real platform and
+    # is skipped on Emscripten so the pure-Python parts of the toolbox
+    # (`pathsim_flight.atmosphere`, `.utils`) still install in the browser.
+    "jsbsim>=1.2.4; sys_platform != 'emscripten'",
 ]
 
 [project.optional-dependencies]
